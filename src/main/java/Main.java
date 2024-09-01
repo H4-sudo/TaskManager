@@ -1,4 +1,7 @@
-package PACKAGE_NAME;
+import FrontEnd.UI.TaskManagerUI;
 
 public class Main {
+    public static void main(String[] args) {
+        TaskManagerUI.main(args);
+    }
 }
