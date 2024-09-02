@@ -24,7 +24,7 @@ public class TaskManagerUI extends JFrame {
 
     private void initUI() {
         setTitle("Task Manager");
-        setSize(400, 500);
+        setSize(400, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
