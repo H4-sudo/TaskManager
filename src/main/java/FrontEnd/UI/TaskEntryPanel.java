@@ -30,7 +30,7 @@ public class TaskEntryPanel extends JPanel {
         add(taskNameField = new JTextField(2));
 
         add(new JLabel("Task Description:"));
-        add(taskDescriptionField = new JTextArea(2, 2));
+        add(taskDescriptionField = new JTextArea(6, 2));
 
         add(new JLabel("Task Category:"));
         add(taskCategoryComboBox = new JComboBox<>(TaskCategory.values()));
