@@ -1,6 +1,7 @@
 package BackEnd.Model;
 
 public class Task<T> {
+    private int id;
     private String name;
     private String description;
     private boolean isCompleted;
@@ -11,6 +12,14 @@ public class Task<T> {
         this.description = description;
         this.category = category;
         this.isCompleted = false;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
