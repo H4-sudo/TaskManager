@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDAO {
-    private Connection connection;
+    private final Connection connection;
 
     public TaskDAO() {
         connection = DatabaseHelper.getConnection();
@@ -17,13 +17,7 @@ public class TaskDAO {
 
     public void insertTask(Task<TaskCategory> task) throws SQLException {
         String query = "INSERT INTO Tasks (name, description, isCompleted, category) VALUES (?,?,?,?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, task.getName());
-            preparedStatement.setString(2, task.getDescription());
-            preparedStatement.setBoolean(3, task.isCompleted());
-            preparedStatement.setString(4, task.getCategory().name());
-            preparedStatement.executeUpdate();
-        }
+        preparedStatement(task, query);
     }
 
     public List<Task<TaskCategory>> getAllTasks() throws SQLException {
@@ -41,5 +35,20 @@ public class TaskDAO {
             }
         }
         return tasks;
+    }
+
+    public void updateTask(Task<TaskCategory> task) throws SQLException {
+        String query = "UPDATE Tasks SET name = ?, description = ?, isCompleted = ? WHERE category = ?";
+        preparedStatement(task, query);
+    }
+
+    private void preparedStatement(Task<TaskCategory> task, String query) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, task.getName());
+            preparedStatement.setString(2, task.getDescription());
+            preparedStatement.setBoolean(3, task.isCompleted());
+            preparedStatement.setString(4, task.getCategory().name());
+            preparedStatement.executeUpdate();
+        }
     }
 }
