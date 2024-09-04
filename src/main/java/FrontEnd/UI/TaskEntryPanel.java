@@ -24,20 +24,38 @@ public class TaskEntryPanel extends JPanel {
     }
 
     private void initUI() {
-        setLayout(new GridLayout(4, 2));
+        setLayout(new GridBagLayout());
+        GridBagConstraints gridConstraints = new GridBagConstraints();
+        gridConstraints.insets = new Insets(5, 5, 5, 5);  // Padding
 
-        add(new JLabel("Task Name:"));
-        add(taskNameField = new JTextField(2));
+        gridConstraints.gridx = 0; gridConstraints.gridy = 0;
+        add(new JLabel("Task Name:"), gridConstraints);
+        gridConstraints.gridx = 1;
+        add(taskNameField = new JTextField(15), gridConstraints);
 
-        add(new JLabel("Task Description:"));
-        add(taskDescriptionField = new JTextArea(6, 2));
+        gridConstraints.gridx = 0; gridConstraints.gridy = 1;
+        add(new JLabel("Task Description:"), gridConstraints);
+        gridConstraints.gridx = 1;
+        gridConstraints.gridwidth = 2;
+        taskDescriptionField = new JTextArea(5, 15);
+        taskDescriptionField.setLineWrap(true);
+        taskDescriptionField.setWrapStyleWord(true);
+        JScrollPane scrollPane = new JScrollPane(taskDescriptionField);
+        add(scrollPane, gridConstraints);
+        gridConstraints.gridwidth = 1;
 
-        add(new JLabel("Task Category:"));
-        add(taskCategoryComboBox = new JComboBox<>(TaskCategory.values()));
+        gridConstraints.gridx = 0; gridConstraints.gridy = 2;
+        add(new JLabel("Task Category:"), gridConstraints);
+        gridConstraints.gridx = 1;
+        add(taskCategoryComboBox = new JComboBox<>(TaskCategory.values()), gridConstraints);
 
+        gridConstraints.gridx = 1; gridConstraints.gridy = 3;
+        gridConstraints.anchor = GridBagConstraints.WEST;
         JButton addButton = new JButton("Add Task");
+        addButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        addButton.setMnemonic('A');
         addButton.addActionListener(new AddTaskListener());
-        add(addButton);
+        add(addButton, gridConstraints);
     }
 
     private class AddTaskListener implements ActionListener {
