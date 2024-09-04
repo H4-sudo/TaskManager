@@ -37,6 +37,15 @@ public class TaskDAO {
         return tasks;
     }
 
+//    public void markCompleted(Task<TaskCategory> task) throws SQLException {
+//        String query = "UPDATE Tasks SET isCompleted=? WHERE name=?";
+//        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+//            preparedStatement.setBoolean(1, task.isCompleted());
+//            preparedStatement.setString(2, task.getName());
+//            preparedStatement.executeUpdate();
+//        }
+//    }
+
     public void updateTask(Task<TaskCategory> task) throws SQLException {
         String query = "UPDATE Tasks SET name = ?, description = ?, isCompleted = ? WHERE category = ?";
         preparedStatement(task, query);
@@ -48,6 +57,14 @@ public class TaskDAO {
             preparedStatement.setString(2, task.getDescription());
             preparedStatement.setBoolean(3, task.isCompleted());
             preparedStatement.setString(4, task.getCategory().name());
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void deleteTask(Task<TaskCategory> task) throws SQLException {
+        String query = "DELETE FROM Tasks WHERE category = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, task.getCategory().name());
             preparedStatement.executeUpdate();
         }
     }
