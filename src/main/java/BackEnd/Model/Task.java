@@ -7,11 +7,11 @@ public class Task<T> {
     private boolean isCompleted;
     private T category;
 
-    public Task(String name, String description, T category) {
+    public Task(String name, String description, boolean isCompleted, T category) {
         this.name = name;
         this.description = description;
         this.category = category;
-        this.isCompleted = false;
+        this.isCompleted = isCompleted;
     }
 
     public int getId() {

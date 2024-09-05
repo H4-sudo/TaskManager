@@ -29,7 +29,7 @@ public class TaskDAO {
                 String description = resultSet.getString("description");
                 boolean completed = resultSet.getBoolean("isCompleted");
                 TaskCategory category = TaskCategory.valueOf(resultSet.getString("category"));
-                Task<TaskCategory> task = new Task<>(name, description, category);
+                Task<TaskCategory> task = new Task<>(name, description, completed, category);
                 task.setCompleted(task.isCompleted());
                 tasks.add(task);
             }
