@@ -16,6 +16,10 @@ import java.util.List;
 
 public class FileManagement extends TaskManagerUI {
     private static final TaskDAO taskDAO = new TaskDAO();
+
+    public FileManagement(TaskManagerUI taskManagerUI) throws SQLException {
+    }
+
     public static void exportTasksToFile(String filePath) throws SQLException {
         List<Task<TaskCategory>> tasks = taskDAO.getAllTasks();
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(Path.of(filePath), StandardCharsets.UTF_8)) {
@@ -36,44 +40,58 @@ public class FileManagement extends TaskManagerUI {
         List<Task<TaskCategory>> tasks = taskDAO.getAllTasks();
         Path path = Path.of(filePath);
         try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8,
-                StandardOpenOption.CREATE,
-                StandardOpenOption.WRITE)) {
+                StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
+            writer.newLine();
+
             for (Task<TaskCategory> task : tasks) {
-                writer.write(task.getName() + ","
-                + task.getDescription() + ","
-                + task.isCompleted() + ","
-                + task.getCategory());
+                writer.write(escapeCSV(task.getName()) + ","
+                        + escapeCSV(task.getDescription()) + ","
+                        + task.getCategory() + ","
+                        + task.isCompleted());
                 writer.newLine();
             }
-            JOptionPane.showMessageDialog(null, "CSV File created successfully.", "Success",
-                    JOptionPane.INFORMATION_MESSAGE);
+
+            JOptionPane.showMessageDialog(null, "CSV File created successfully.",
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Unable to create csv file.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Unable to create CSV file.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
+    private static String escapeCSV(String value) {
+        return value.contains(",") ? "\"" + value + "\"" : value;
+    }
+
+
     public static void importFromFile(String filePath) throws IOException, SQLException {
         Path path = Path.of(filePath);
-        try (InputStream inputStream = Files.newInputStream(path, StandardOpenOption.READ)) {
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    String[] taskInfo = line.split(",");
-                    String name = taskInfo[0];
-                    String description = taskInfo[1];
-                    boolean completed = Boolean.parseBoolean(taskInfo[2]);
-                    TaskCategory category = TaskCategory.valueOf(taskInfo[3]);
-                    Task<TaskCategory> task = new Task<>(name, description, completed, category);
-                    taskDAO.insertTask(task);
+        try (BufferedReader bufferedReader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] taskInfo = line.split(",");
+                if (taskInfo.length < 4) {
+                    continue;  // Skip malformed lines
                 }
-                JOptionPane.showMessageDialog(null, "Tasks added to database successfully!",
-                        "Success", JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Unable to add tasks to the database",
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                String name = taskInfo[0];
+                String description = taskInfo[1];
+                boolean completed = Boolean.parseBoolean(taskInfo[2]);
+                TaskCategory category;
+                try {
+                    category = TaskCategory.valueOf(taskInfo[3]);
+                } catch (IllegalArgumentException e) {
+                    category = TaskCategory.Other;
+                }
+                Task<TaskCategory> task = new Task<>(name, description, completed, category);
+                taskDAO.insertTask(task);
+                TaskManagerUI.loadTasks();
             }
+            JOptionPane.showMessageDialog(null, "Tasks added to database successfully! " +
+                            "Restart the Application to see added tasks.",
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Unable to add tasks to the database",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
