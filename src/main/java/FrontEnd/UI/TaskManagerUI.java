@@ -29,7 +29,7 @@ public class TaskManagerUI extends JFrame {
 
     private void initUI() throws SQLException {
         setTitle("Task Manager");
-        setSize(800, 600); // Increased size for better visibility
+        setSize(800, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -107,12 +107,15 @@ public class TaskManagerUI extends JFrame {
                     selectedTask.setCompleted(true);
                     taskDAO.updateTask(selectedTask);
                     taskTableModel.fireTableRowsUpdated(selectedIndex, selectedIndex);
-                    JOptionPane.showMessageDialog(this, "Task marked as completed", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Task marked as completed",
+                            "Success", JOptionPane.INFORMATION_MESSAGE);
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, "Failed to complete task: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Failed to complete task: "
+                            + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "No task selected", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No task selected",
+                        "Error", JOptionPane.WARNING_MESSAGE);
             }
         });
         return completeButton;
@@ -128,12 +131,15 @@ public class TaskManagerUI extends JFrame {
                     selectedTask.setCompleted(false);
                     taskDAO.updateTask(selectedTask);
                     taskTableModel.fireTableRowsUpdated(selectedIndex, selectedIndex);
-                    JOptionPane.showMessageDialog(this, "Task reverted", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Task reverted",
+                            "Success", JOptionPane.INFORMATION_MESSAGE);
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, "Failed to revert task: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Failed to revert task: "
+                            + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "No task selected", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No task selected",
+                        "Error", JOptionPane.WARNING_MESSAGE);
             }
         });
         return revertButton;
@@ -151,9 +157,11 @@ public class TaskManagerUI extends JFrame {
                 File fileToSave = fileChooser.getSelectedFile();
                 try {
                     FileManagement.exportTasksToFile(fileToSave.getAbsolutePath() + ".txt");
-                    JOptionPane.showMessageDialog(this, "Tasks exported to text file.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Tasks exported to text file.",
+                            "Success", JOptionPane.INFORMATION_MESSAGE);
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, "Error exporting tasks: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Error exporting tasks: "
+                            + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -171,9 +179,11 @@ public class TaskManagerUI extends JFrame {
                 File fileToSave = fileChooser.getSelectedFile();
                 try {
                     FileManagement.exportTasksToCSV(fileToSave.getAbsolutePath() + ".csv");
-                    JOptionPane.showMessageDialog(this, "Tasks exported to CSV file.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Tasks exported to CSV file.",
+                            "Success", JOptionPane.INFORMATION_MESSAGE);
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, "Error exporting tasks: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Error exporting tasks: "
+                            + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -192,7 +202,7 @@ public class TaskManagerUI extends JFrame {
         dialog.add(saveToTxt);
         dialog.add(saveToCSV);
 
-        dialog.setSize(400, 200); // Adjusted size for better dialog display
+        dialog.setSize(400, 200);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
@@ -200,9 +210,17 @@ public class TaskManagerUI extends JFrame {
     protected static void loadTasks() {
         try {
             List<Task<TaskCategory>> tasks = taskDAO.getAllTasks();
+            System.out.println("Fetched " + tasks.size() + " tasks from the database.");
+
             taskTableModel.setTasks(tasks);
+            System.out.println("Updated taskTableModel.");
+
             taskListModel.clear();
             tasks.forEach(taskListModel::addElement);
+            System.out.println("Updated taskListModel.");
+
+            // Notify the table of the changes (if necessary)
+             taskTableModel.fireTableDataChanged();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Failed to load tasks: " + e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -234,10 +252,12 @@ public class TaskManagerUI extends JFrame {
             try {
                 taskDAO.updateTask(selectedTask);
                 taskTableModel.fireTableRowsUpdated(taskTable.getSelectedRow(), taskTable.getSelectedRow());
-                JOptionPane.showMessageDialog(dialog, "Task updated successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(dialog, "Task updated successfully", "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
                 dialog.dispose();
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(dialog, "Failed to update task: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(dialog, "Failed to update task: " + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 

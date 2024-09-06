@@ -35,13 +35,11 @@ public class TaskEntryPanel extends JPanel {
         gridConstraints.gridx = 0; gridConstraints.gridy = 0;
         add(new JLabel("Task Name:"), gridConstraints);
         gridConstraints.gridx = 1;
-        gridConstraints.gridwidth = 2;
         add(taskNameField = new JTextField(15), gridConstraints);
 
         gridConstraints.gridx = 0; gridConstraints.gridy = 1;
         add(new JLabel("Task Description:"), gridConstraints);
         gridConstraints.gridx = 1;
-        gridConstraints.gridwidth = 2;
         taskDescriptionField = new JTextArea(5, 15);
         taskDescriptionField.setLineWrap(true);
         taskDescriptionField.setWrapStyleWord(true);
@@ -104,7 +102,8 @@ public class TaskEntryPanel extends JPanel {
                 try {
                     FileManagement.importFromFile(selectedFile.getAbsolutePath());
                 } catch (IOException | SQLException ex) {
-                    JOptionPane.showMessageDialog(this, "Failed to add tasks from file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Failed to add tasks from file: "
+                            + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

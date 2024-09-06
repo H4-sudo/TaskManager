@@ -41,8 +41,6 @@ public class FileManagement extends TaskManagerUI {
         Path path = Path.of(filePath);
         try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8,
                 StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
-            writer.newLine();
-
             for (Task<TaskCategory> task : tasks) {
                 writer.write(escapeCSV(task.getName()) + ","
                         + escapeCSV(task.getDescription()) + ","
@@ -71,14 +69,14 @@ public class FileManagement extends TaskManagerUI {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] taskInfo = line.split(",");
                 if (taskInfo.length < 4) {
-                    continue;  // Skip malformed lines
+                    continue;
                 }
                 String name = taskInfo[0];
                 String description = taskInfo[1];
-                boolean completed = Boolean.parseBoolean(taskInfo[2]);
+                boolean completed = Boolean.parseBoolean(taskInfo[3]);
                 TaskCategory category;
                 try {
-                    category = TaskCategory.valueOf(taskInfo[3]);
+                    category = TaskCategory.valueOf(taskInfo[2]);
                 } catch (IllegalArgumentException e) {
                     category = TaskCategory.Other;
                 }
