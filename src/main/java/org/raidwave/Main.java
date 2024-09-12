@@ -1,3 +1,5 @@
+package org.raidwave;
+
 import FrontEnd.UI.TaskManagerUI;
 
 public class Main {

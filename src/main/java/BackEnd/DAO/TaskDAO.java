@@ -29,22 +29,13 @@ public class TaskDAO {
                 String description = resultSet.getString("description");
                 boolean completed = resultSet.getBoolean("isCompleted");
                 TaskCategory category = TaskCategory.valueOf(resultSet.getString("category"));
-                Task<TaskCategory> task = new Task<>(name, description, category);
+                Task<TaskCategory> task = new Task<>(name, description, completed, category);
                 task.setCompleted(task.isCompleted());
                 tasks.add(task);
             }
         }
         return tasks;
     }
-
-//    public void markCompleted(Task<TaskCategory> task) throws SQLException {
-//        String query = "UPDATE Tasks SET isCompleted=? WHERE name=?";
-//        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-//            preparedStatement.setBoolean(1, task.isCompleted());
-//            preparedStatement.setString(2, task.getName());
-//            preparedStatement.executeUpdate();
-//        }
-//    }
 
     public void updateTask(Task<TaskCategory> task) throws SQLException {
         String query = "UPDATE Tasks SET name = ?, description = ?, isCompleted = ? WHERE category = ?";
