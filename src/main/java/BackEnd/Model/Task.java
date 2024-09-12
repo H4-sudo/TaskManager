@@ -1,25 +1,16 @@
 package BackEnd.Model;
 
 public class Task<T> {
-    private int id;
     private String name;
     private String description;
     private boolean isCompleted;
     private T category;
 
-    public Task(String name, String description, T category) {
+    public Task(String name, String description, boolean isCompleted, T category) {
         this.name = name;
         this.description = description;
         this.category = category;
-        this.isCompleted = false;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.isCompleted = isCompleted;
     }
 
     public String getName() {
